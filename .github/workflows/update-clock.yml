@@ -80,6 +80,16 @@ SVGEOF
           sed -i "s/COLOR_PLACEHOLDER/$COLOR/" bitcoin.svg
           sed -i "s/ARROW_PLACEHOLDER/$ARROW/" bitcoin.svg
           sed -i "s/CHANGE_PLACEHOLDER/$BTC_CHANGE_FORMATTED/" bitcoin.svg
+          
+          # Create simple Bitcoin number widget
+          cat > btc-simple.svg << 'SVGEOF'
+<svg width="150" height="50" xmlns="http://www.w3.org/2000/svg">
+  <rect width="150" height="50" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+  <text x="75" y="20" font-size="12" fill="#aaa" font-family="Arial, sans-serif" text-anchor="middle">BTC</text>
+  <text x="75" y="38" font-size="16" fill="#fff" font-weight="bold" font-family="Arial, sans-serif" text-anchor="middle">$PRICE_PLACEHOLDER</text>
+</svg>
+SVGEOF
+          sed -i "s/PRICE_PLACEHOLDER/$BTC_PRICE_FORMATTED/" btc-simple.svg
 
       - name: Fetch S&P 500 Price
         run: |
@@ -127,12 +137,22 @@ SVGEOF
           sed -i "s/COLOR_PLACEHOLDER/$COLOR/" sp500.svg
           sed -i "s/ARROW_PLACEHOLDER/$ARROW/" sp500.svg
           sed -i "s/CHANGE_PLACEHOLDER/$SP500_CHANGE_FORMATTED/" sp500.svg
+          
+          # Create simple S&P 500 number widget
+          cat > sp500-simple.svg << 'SVGEOF'
+<svg width="150" height="50" xmlns="http://www.w3.org/2000/svg">
+  <rect width="150" height="50" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+  <text x="75" y="20" font-size="12" fill="#aaa" font-family="Arial, sans-serif" text-anchor="middle">S&amp;P 500</text>
+  <text x="75" y="38" font-size="16" fill="#fff" font-weight="bold" font-family="Arial, sans-serif" text-anchor="middle">$PRICE_PLACEHOLDER</text>
+</svg>
+SVGEOF
+          sed -i "s/PRICE_PLACEHOLDER/$SP500_PRICE_FORMATTED/" sp500-simple.svg
 
       - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add clock.svg bitcoin.svg sp500.svg
+          git add clock.svg bitcoin.svg sp500.svg btc-simple.svg sp500-simple.svg
           git commit -m "Update clock, Bitcoin and S&P 500" || exit 0
           git pull --rebase
           git push
