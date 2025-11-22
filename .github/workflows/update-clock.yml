@@ -1,36 +1,41 @@
-name: Update Clock SVG
+name: Update Fancy Clock
 
 on:
   schedule:
     - cron: "*/5 * * * *"
-  workflow_dispatch:
 
 permissions:
-  contents: write   # <-- VERY IMPORTANT
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}   # ensure write access
+      - uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Generate clock SVG
+      - name: Generate Clock SVG
         run: |
-          node scripts/generate-clock.js
+          # Chicago local time
+          H=$(TZ="America/Chicago" date +"%H")
+          M=$(TZ="America/Chicago" date +"%M")
+          S=$(TZ="America/Chicago" date +"%S")
 
-      - name: Commit & push
+          # Convert to clock angles
+          H_ANGLE=$(( (H % 12) * 30 + M / 2 ))
+          M_ANGLE=$(( M * 6 ))
+          S_ANGLE=$(( S * 6 ))
+
+          # Create SVG
+          sed \
+            -e "s/HOUR_ANGLE/$H_ANGLE/" \
+            -e "s/MIN_ANGLE/$M_ANGLE/" \
+            -e "s/SEC_ANGLE/$S_ANGLE/" \
+            clock.svg.template > clock.svg
+
+      - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add clock.svg
-          git commit -m "Update clock" || echo "No changes"
+          git commit -m "Update fancy clock" || exit 0
           git push
