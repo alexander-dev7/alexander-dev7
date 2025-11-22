@@ -34,12 +34,47 @@ jobs:
             -e "s/SEC_ANGLE/$S_ANGLE/" \
             clock.svg.template > clock.svg
 
-      - name: Commit
+      - name: Fetch Bitcoin Price
+        run: |
+          # Fetch Bitcoin price from CoinGecko API
+          BTC_DATA=$(curl -s "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true")
+          BTC_PRICE=$(echo $BTC_DATA | grep -oP '"usd":\K[0-9.]+')
+          BTC_CHANGE=$(echo $BTC_DATA | grep -oP '"usd_24h_change":\K[-0-9.]+')
+          
+          # Format price with commas
+          BTC_PRICE_FORMATTED=$(printf "%'.0f" $BTC_PRICE)
+          BTC_CHANGE_FORMATTED=$(printf "%.2f" $BTC_CHANGE)
+          
+          # Determine color based on change
+          if (( $(echo "$BTC_CHANGE >= 0" | bc -l) )); then
+            COLOR="#10b981"
+            ARROW="▲"
+          else
+            COLOR="#ef4444"
+            ARROW="▼"
+          fi
+          
+          # Create Bitcoin price SVG
+          cat > bitcoin.svg << EOF
+          <svg width="300" height="80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1a1a1a"/>
+                <stop offset="100%" stop-color="#2d2d2d"/>
+              </linearGradient>
+            </defs>
+            <rect width="300" height="80" rx="10" fill="url(#bgGrad)" stroke="#444" stroke-width="2"/>
+            <text x="20" y="30" font-size="16" fill="#aaa" font-family="Arial, sans-serif">Bitcoin (BTC)</text>
+            <text x="20" y="55" font-size="24" fill="#fff" font-weight="bold" font-family="Arial, sans-serif">\$$BTC_PRICE_FORMATTED</text>
+            <text x="20" y="72" font-size="14" fill="$COLOR" font-family="Arial, sans-serif">$ARROW $BTC_CHANGE_FORMATTED%</text>
+          </svg>
+          EOF
 
+      - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add clock.svg
-          git commit -m "Update clock" || exit 0
+          git add clock.svg bitcoin.svg
+          git commit -m "Update clock and Bitcoin price" || exit 0
           git pull --rebase
           git push
