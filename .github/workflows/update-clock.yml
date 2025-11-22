@@ -33,9 +33,11 @@ jobs:
             clock.svg.template > clock.svg
 
       - name: Commit
+
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add clock.svg
-          git commit -m "Update fancy clock" || exit 0
+          git commit -m "Update clock" || exit 0
+          git pull --rebase
           git push
