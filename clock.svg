@@ -30,12 +30,12 @@
   <!-- Minute hand -->
   <line x1="100" y1="100" x2="100" y2="40"
         stroke="#fff" stroke-width="4" stroke-linecap="round"
-        transform="rotate(96 100 100)"/>
+        transform="rotate(186 100 100)"/>
 
   <!-- Second hand -->
   <line x1="100" y1="100" x2="100" y2="30"
         stroke="#ff4655" stroke-width="2" stroke-linecap="round"
-        transform="rotate(258 100 100)"/>
+        transform="rotate(300 100 100)"/>
 
   <circle cx="100" cy="100" r="5" fill="#ff4655"/>
 </svg>
