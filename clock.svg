@@ -30,7 +30,7 @@
   <!-- Minute hand -->
   <line x1="100" y1="100" x2="100" y2="40"
         stroke="#fff" stroke-width="4" stroke-linecap="round"
-        transform="rotate(348 100 100)"/>
+        transform="rotate(150 100 100)"/>
 
   <!-- Second hand -->
   <line x1="100" y1="100" x2="100" y2="30"
