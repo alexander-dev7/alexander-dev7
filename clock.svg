@@ -25,17 +25,17 @@
   <!-- Hour hand -->
   <line x1="100" y1="100" x2="100" y2="55"
         stroke="#fff" stroke-width="6" stroke-linecap="round"
-        transform="rotate(52 100 100)"/>
+        transform="rotate(58 100 100)"/>
 
   <!-- Minute hand -->
   <line x1="100" y1="100" x2="100" y2="40"
         stroke="#fff" stroke-width="4" stroke-linecap="round"
-        transform="rotate(270 100 100)"/>
+        transform="rotate(336 100 100)"/>
 
   <!-- Second hand -->
   <line x1="100" y1="100" x2="100" y2="30"
         stroke="#ff4655" stroke-width="2" stroke-linecap="round"
-        transform="rotate(162 100 100)"/>
+        transform="rotate(138 100 100)"/>
 
   <circle cx="100" cy="100" r="5" fill="#ff4655"/>
 </svg>
